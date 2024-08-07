@@ -234,7 +234,7 @@ Widget JawabanBenar() {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/logo/Logo v1.png',
+                  'assets/icons/ic_ceklis.png',
                   height: 24,
                 ),
                 SizedBox(
@@ -280,23 +280,48 @@ Widget JawabanSalah() {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Image.asset(
-                  'assets/images/logo/Logo v1.png',
+                  'assets/icons/ic_silang.png',
                   height: 24,
                 ),
                 SizedBox(
                   width: 8,
                 ),
                 Text(
-                  'Selamat, Jawaban Anda Benar !',
+                  'Maaf, Jawaban Kamu Salah :(',
                   style: GoogleFonts.montserrat(
                       textStyle: TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w700,
                           color: Color(0XFFA71818))),
-                )
+                ),
               ],
             ),
           )),
+          SizedBox(
+        height: 8,
+      ),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            'Jawaban Benar: ',
+            style: GoogleFonts.montserrat(
+                textStyle: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            )),
+          ),
+          Text(
+            'Manager',
+            style: GoogleFonts.montserrat(
+                textStyle: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w700,
+            )),
+          ),
+        ],
+      )
     ],
   );
 }
