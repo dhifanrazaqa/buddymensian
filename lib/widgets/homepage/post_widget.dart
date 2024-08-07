@@ -1,21 +1,17 @@
+import 'package:buddymensia/models/post.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 class SocialMediaPost extends StatelessWidget {
-  final String userName;
-  final String timeAgo;
-  final String imageUrl;
-  final String caption;
+  final Post post;
   final int likes;
   final int comments;
   final int shares;
 
   const SocialMediaPost({
     super.key,
-    required this.userName,
-    required this.timeAgo,
-    required this.imageUrl,
-    required this.caption,
+    required this.post,
     required this.likes,
     required this.comments,
     required this.shares,
@@ -42,17 +38,19 @@ class SocialMediaPost extends StatelessWidget {
           ListTile(
             leading: CircleAvatar(
               backgroundColor: Colors.teal[100],
-              child: Text(userName[0]),
+              child: Text(post.author.fullname![0]),
             ),
             title: Text(
-              userName,
+              post.author.fullname!,
               style: GoogleFonts.montserrat(
                   fontWeight: FontWeight.bold, fontSize: 16),
             ),
             subtitle: Text(
-              timeAgo,
+              DateFormat('EEEE, d MMMM y', 'id_ID').format(post.createdAt!),
               style: GoogleFonts.istokWeb(
-                  fontWeight: FontWeight.w900, fontSize: 16, color: Colors.grey),
+                  fontWeight: FontWeight.w900,
+                  fontSize: 16,
+                  color: Colors.grey),
             ),
             trailing: const Icon(Icons.more_vert),
           ),
@@ -61,7 +59,7 @@ class SocialMediaPost extends StatelessWidget {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: Image.network(
-                imageUrl,
+                post.imageUrl!,
                 fit: BoxFit.cover,
                 height: 200,
                 width: double.infinity,
@@ -71,7 +69,7 @@ class SocialMediaPost extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: Text(
-              caption,
+              post.caption!,
               style: GoogleFonts.istokWeb(color: Colors.black87, fontSize: 14),
             ),
           ),

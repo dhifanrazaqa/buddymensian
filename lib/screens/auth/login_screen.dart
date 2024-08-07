@@ -123,6 +123,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: 'email@example.com',
                       inputType: TextInputType.emailAddress,
                       isRequired: true,
+                      icon: Icons.email,
                     ),
                     const SizedBox(height: 16),
                     SecureTextfieldWidget(
@@ -132,6 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       isRequired: true,
                       controller: _passwordController,
                       isObscured: _obscureText,
+                      icon: Icons.lock,
                       handler: () {
                         setState(() {
                           _obscureText = !_obscureText;

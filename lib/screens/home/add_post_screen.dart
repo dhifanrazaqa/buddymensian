@@ -1,11 +1,16 @@
 import 'dart:io';
 
 import 'package:buddymensia/colors.dart';
+import 'package:buddymensia/models/post.dart';
+import 'package:buddymensia/models/user.dart';
+import 'package:buddymensia/services/post_services.dart';
 import 'package:buddymensia/widgets/buttons/primary_btn_widget.dart';
 import 'package:buddymensia/widgets/textfields/date_textfield_widget.dart';
 import 'package:buddymensia/widgets/textfields/general_textfield_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class AddPostScreen extends StatefulWidget {
   final File image;
@@ -24,8 +29,28 @@ class _AddPostScreenState extends State<AddPostScreen> {
 
   bool _isLoading = false;
 
-  void post() {
+  void post() async {
     if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      final result =
+          await Provider.of<PostServices>(context, listen: false).uploadData(
+              widget.image,
+              Post(
+                author: User(),
+                judul: _judulController.text,
+                caption: _captionController.text,
+                createdAt: DateFormat('EEEE, d MMMM y', 'id_ID')
+                    .parse(_dateController.text),
+              ));
+      if (result == 'Success') {
+        Navigator.of(context).pop();
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Gagal Unggah.')),
+        );
+      }
       setState(() {
         _isLoading = true;
       });
@@ -57,11 +82,13 @@ class _AddPostScreenState extends State<AddPostScreen> {
             children: [
               Image.file(widget.image),
               GeneralTextfieldWidget(
-                  labelText: 'Judul Foto',
-                  hintText: 'Masukkan Judul Foto',
-                  inputType: TextInputType.name,
-                  isRequired: true,
-                  controller: _judulController),
+                labelText: 'Judul Foto',
+                hintText: 'Masukkan Judul Foto',
+                inputType: TextInputType.name,
+                isRequired: true,
+                controller: _judulController,
+                icon: Icons.subtitles,
+              ),
               const SizedBox(height: 16),
               GeneralTextfieldWidget(
                 labelText: 'Captions',
@@ -70,13 +97,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 isRequired: true,
                 controller: _captionController,
                 maxLines: 3,
+                icon: Icons.subtitles,
               ),
               const SizedBox(height: 16),
               DateTextfieldWidget(
                   labelText: 'Tanggal Foto',
                   hintText: 'Pilih Tanggal',
                   isRequired: true,
-                  controller: _dateController),
+                  controller: _dateController,
+                  icon: Icons.calendar_month_sharp,
+                  ),
               const SizedBox(height: 24),
               _isLoading
                   ? const Center(

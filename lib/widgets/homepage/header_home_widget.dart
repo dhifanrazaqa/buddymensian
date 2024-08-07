@@ -22,9 +22,18 @@ class HeaderHomeWidget extends StatelessWidget {
             child: Row(
               children: [
                 Container(
+                  alignment: Alignment.center,
                   height: 32,
                   width: 32,
-                  color: AppColors.hijauMuda,
+                  decoration: BoxDecoration(
+                    color: AppColors.hijauMuda,
+                    borderRadius: BorderRadius.circular(8)
+                  ),
+                  child: Text(
+                    name[0],
+                    style: GoogleFonts.istokWeb(
+                        fontSize: 18, color: Colors.teal[700]),
+                  ),
                 ),
                 const SizedBox(
                   width: 8,
@@ -63,7 +72,9 @@ class HeaderHomeWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(width: width,),
+                SizedBox(
+                  width: width,
+                ),
                 Text(
                   'Hari ini',
                   style: GoogleFonts.istokWeb(

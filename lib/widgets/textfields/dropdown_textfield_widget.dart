@@ -2,25 +2,25 @@ import 'package:buddymensia/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class SecureTextfieldWidget extends StatelessWidget {
+class DropdownFieldWidget extends StatelessWidget {
   final String labelText;
   final String hintText;
-  final TextInputType inputType;
   final bool isRequired;
-  final bool isObscured;
-  final VoidCallback handler;
-  final TextEditingController controller;
+  final List<String> items;
+  final String? value;
+  final Function(String?) onChanged;
   final IconData? icon;
-  const SecureTextfieldWidget(
-      {super.key,
-      required this.labelText,
-      required this.hintText,
-      required this.inputType,
-      required this.isRequired,
-      required this.controller,
-      required this.isObscured,
-      required this.handler,
-      this.icon});
+
+  const DropdownFieldWidget({
+    super.key,
+    required this.labelText,
+    required this.hintText,
+    required this.isRequired,
+    required this.items,
+    required this.value,
+    required this.onChanged,
+    this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -35,33 +35,32 @@ class SecureTextfieldWidget extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        const SizedBox(
-          height: 2,
-        ),
+        const SizedBox(height: 2),
         Container(
           decoration: BoxDecoration(
             color: Colors.white,
             borderRadius: BorderRadius.circular(12),
           ),
-          child: TextFormField(
-            obscureText: isObscured,
-            controller: controller,
-            keyboardType: inputType,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Field tidak boleh kosong.';
-              }
-              if (value.length < 8) {
-                return 'Password paling sedikit 8 karakter.';
-              }
-              return null;
-            },
+          child: DropdownButtonFormField<String>(
+            value: value,
+            onChanged: onChanged,
+            validator: (value) => value == null ? 'Field tidak boleh kosong.' : null,
+            items: items.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(value),
+              );
+            }).toList(),
+            hint: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  hintText,
+                  style: GoogleFonts.istokWeb(
+                    fontSize: 14,
+                    color: Colors.grey[400],
+                  ),
+                )),
             decoration: InputDecoration(
-              hintText: hintText,
-              hintStyle: GoogleFonts.istokWeb(
-                fontSize: 14,
-                color: Colors.grey[400],
-              ),
               prefixIcon: icon != null
                   ? Padding(
                       padding: const EdgeInsets.only(left: 10, right: 5),
@@ -82,12 +81,6 @@ class SecureTextfieldWidget extends StatelessWidget {
               ),
               filled: true,
               fillColor: Colors.white,
-              suffixIcon: IconButton(
-                  icon: Icon(
-                    isObscured ? Icons.visibility : Icons.visibility_off,
-                    color: Colors.grey[400],
-                  ),
-                  onPressed: handler),
             ),
           ),
         ),

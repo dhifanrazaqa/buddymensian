@@ -3,13 +3,17 @@ import 'package:buddymensia/firebase_options.dart';
 import 'package:buddymensia/screens/auth/login_screen.dart';
 import 'package:buddymensia/screens/main_screen.dart';
 import 'package:buddymensia/services/auth_services.dart';
+import 'package:buddymensia/services/jadwal_services.dart';
+import 'package:buddymensia/services/post_services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: ".env");
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -46,6 +50,8 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthService()),
+        ChangeNotifierProvider(create: (context) => PostServices()),
+        ChangeNotifierProvider(create: (context) => JadwalServices()),
       ],
       child: MaterialApp(
         title: 'Buddymensia',

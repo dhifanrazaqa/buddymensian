@@ -1,10 +1,14 @@
+import 'package:buddymensia/models/post.dart';
 import 'package:buddymensia/models/user.dart';
 import 'package:buddymensia/services/auth_services.dart';
+import 'package:buddymensia/services/jadwal_services.dart';
+import 'package:buddymensia/services/post_services.dart';
 import 'package:buddymensia/widgets/homepage/container_widget.dart';
 import 'package:buddymensia/widgets/homepage/header_home_widget.dart';
 import 'package:buddymensia/widgets/homepage/post_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:table_calendar/table_calendar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,6 +22,13 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     AuthService authProvider = Provider.of<AuthService>(context);
     User? user = authProvider.user;
+
+    PostServices postProvider = Provider.of<PostServices>(context);
+    List<Post?> posts = postProvider.items;
+
+    JadwalServices jadwalProvider = Provider.of<JadwalServices>(context);
+    int countRutinitas = jadwalProvider.items.where((jadwal) => jadwal.tipe == 'Rutinitas' && isSameDay(DateTime.now(), jadwal.eventAt)).length;
+    int countKegiatan = jadwalProvider.items.where((jadwal) => jadwal.tipe == 'Kegiatan' && isSameDay(DateTime.now(), jadwal.eventAt)).length;
 
     double width = MediaQuery.of(context).size.width;
 
@@ -38,40 +49,32 @@ class _HomeScreenState extends State<HomeScreen> {
                   ContainerWidget(
                       width: width * 0.4,
                       title: 'Kegiatan Hari Ini',
-                      value: '3'),
+                      value: countKegiatan.toString()),
                   ContainerWidget(
                       width: width * 0.4,
                       title: 'Rutinitas Hari Ini',
-                      value: '2'),
+                      value: countRutinitas.toString()),
                 ],
               ),
               const SizedBox(
                 height: 12,
               ),
-              const SocialMediaPost(
-                userName: 'Hadiano Sutomo',
-                timeAgo: '10 mins ago',
-                imageUrl:
-                    'https://picsum.photos/seed/picsum/200/300', // Replace with actual image URL
-                caption:
-                    'Bahagia sekali, ulang tahun sederhana dengan anak dan cucu tercinta.',
-                likes: 90,
-                comments: 3,
-                shares: 10,
-              ),
-              const SizedBox(
-                height: 12,
-              ),
-              const SocialMediaPost(
-                userName: 'Hadiano Sutomo',
-                timeAgo: '10 mins ago',
-                imageUrl:
-                    'https://picsum.photos/seed/picsum/200/300', // Replace with actual image URL
-                caption:
-                    'Bahagia sekali, ulang tahun sederhana dengan anak dan cucu tercinta.',
-                likes: 90,
-                comments: 3,
-                shares: 10,
+              Column(
+                children: posts.map((post) {
+                  return Column(
+                    children: [
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      SocialMediaPost(
+                        post: post!,
+                        likes: 90,
+                        comments: 3,
+                        shares: 10,
+                      ),
+                    ],
+                  );
+                }).toList(),
               ),
             ],
           ),
