@@ -1,4 +1,5 @@
 import 'package:buddymensia/colors.dart';
+import 'package:buddymensia/screens/guessme/kuis_guess_me_screen.dart';
 import 'package:buddymensia/widgets/buttons/outlined_btn_widget.dart';
 import 'package:buddymensia/widgets/buttons/primary_btn_widget.dart';
 import 'package:flutter/material.dart';
@@ -264,16 +265,23 @@ class GuessMeDetail extends StatelessWidget {
                   child: PrimaryBtnWidget(
                       buttonText: 'Mulai Kuis Guess Me',
                       color: AppColors.hijauTuaSecondary,
-                      handler: () {}),
+                      handler: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    const KuisGuessMeScreen()));
+                      }),
                 ),
                 const SizedBox(height: 8),
+                //Button Kembali
                 SizedBox(
                   width: 300,
                   height: 40,
                   child: OutlinedBtnWidget(
                       borderColor: AppColors.hijauTuaSecondary,
-                      child: Text('kembali'),
-                      handler: () {}),
+                      child: Text('Kembali'),
+                      handler: () {
+                        Navigator.pop(context);
+                      }),
                 ),
                 
                 

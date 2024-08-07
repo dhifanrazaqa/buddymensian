@@ -3,6 +3,7 @@ import 'package:buddymensia/widgets/buttons/outlined_btn_widget.dart';
 import 'package:buddymensia/widgets/buttons/primary_btn_widget.dart';
 import 'package:buddymensia/widgets/textfields/general_textfield_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AddGuessMeScreen extends StatefulWidget {
@@ -167,6 +168,7 @@ class _AddGuessMeScreenState extends State<AddGuessMeScreen> {
                           onPressed: () {
                             _toggleSidebar();
                           },
+                          
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
