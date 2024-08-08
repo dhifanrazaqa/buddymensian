@@ -15,8 +15,8 @@ class ProfileHeaderWidget extends StatelessWidget {
             radius: 40,
             backgroundColor: Colors.teal[100],
             child: Text(
-              'HS',
-              style: TextStyle(fontSize: 24, color: Colors.teal[700]),
+              name[0],
+              style: GoogleFonts.istokWeb(fontSize: 24, color: Colors.teal[700]),
             ),
           ),
           const SizedBox(width: 16),

@@ -1,5 +1,6 @@
 import 'package:buddymensia/colors.dart';
 import 'package:buddymensia/models/user.dart';
+import 'package:buddymensia/screens/auth/login_screen.dart';
 import 'package:buddymensia/services/auth_services.dart';
 import 'package:buddymensia/widgets/profile/profile_header_widget.dart';
 import 'package:buddymensia/widgets/profile/profile_posts_widget.dart';
@@ -41,6 +42,17 @@ class ProfileScreen extends StatelessWidget {
                 name: user!.fullname!,
               ),
               const ProfileScheduleWidget(),
+              ElevatedButton(
+                  onPressed: () async {
+                    await authProvider.signOut();
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const LoginScreen(),
+                      ),
+                    );
+                  },
+                  child: Text('Logout')),
               const ProfilePostsWidget(),
             ],
           ),

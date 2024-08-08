@@ -8,10 +8,11 @@ import 'package:buddymensia/screens/home/home_screen.dart';
 import 'package:buddymensia/screens/profile/profile_screen.dart';
 import 'package:buddymensia/screens/safezone/safezone_screen.dart';
 import 'package:buddymensia/services/auth_services.dart';
+import 'package:buddymensia/services/jadwal_services.dart';
+import 'package:buddymensia/services/post_services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -40,30 +41,23 @@ class _MainScreenState extends State<MainScreen> {
   }
 
   Future<void> _pickImageFromGallery() async {
-    final status = await Permission.camera.request();
-    if (status.isGranted) {
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-      setState(() {
-        _imageFile = image != null ? File(image.path) : null;
-      });
-      if (_imageFile != null) {
-        Navigator.of(context).push(MaterialPageRoute(
-            builder: (context) => AddPostScreen(
-                  image: _imageFile!,
-                )));
-      }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Storage permission denied.'),
-        ),
-      );
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    setState(() {
+      _imageFile = image != null ? File(image.path) : null;
+    });
+    if (_imageFile != null) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => AddPostScreen(
+                image: _imageFile!,
+              )));
     }
   }
 
   @override
   void initState() {
     Provider.of<AuthService>(context, listen: false).getUser();
+    Provider.of<PostServices>(context, listen: false).fetchData();
+    Provider.of<JadwalServices>(context, listen: false).fetchData();
     super.initState();
   }
 

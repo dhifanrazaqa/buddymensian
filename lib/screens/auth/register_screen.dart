@@ -120,6 +120,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       hintText: 'email@example.com',
                       inputType: TextInputType.emailAddress,
                       isRequired: true,
+                      icon: Icons.email,
                     ),
                     const SizedBox(height: 16),
                     GeneralTextfieldWidget(
@@ -128,6 +129,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       hintText: 'Hadiano Sutomo',
                       inputType: TextInputType.name,
                       isRequired: true,
+                      icon: Icons.subtitles,
                     ),
                     const SizedBox(height: 16),
                     SecureTextfieldWidget(
@@ -137,6 +139,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       isRequired: true,
                       controller: _passwordController,
                       isObscured: _obscureText,
+                      icon: Icons.lock,
                       handler: () {
                         setState(() {
                           _obscureText = !_obscureText;

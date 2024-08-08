@@ -1,18 +1,26 @@
+import 'package:buddymensia/models/jadwal.dart';
+import 'package:buddymensia/screens/profile/schedule_screen.dart';
+import 'package:buddymensia/services/jadwal_services.dart';
 import 'package:buddymensia/widgets/buttons/text_btn_widget.dart';
+import 'package:buddymensia/widgets/profile/schedule/schedule_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class ProfileScheduleWidget extends StatelessWidget {
   const ProfileScheduleWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
+    JadwalServices jadwalProvider = Provider.of<JadwalServices>(context);
+    List<Jadwal?> jadwals = jadwalProvider.items.take(3).toList();
+
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
@@ -20,83 +28,30 @@ class ProfileScheduleWidget extends StatelessWidget {
                 style: GoogleFonts.montserrat(
                     fontWeight: FontWeight.bold, fontSize: 13),
               ),
-              TextBtnWidget(text: 'Detail', handler: () {})
+              TextBtnWidget(
+                  text: 'Detail',
+                  handler: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                          builder: (context) => const SchedulePage()),
+                    );
+                  })
             ],
           ),
-        ),
-        _buildScheduleItem(
-            'Sarapan & Latihan otak', '7:30', Colors.blue, 'Kegiatan'),
-        _buildScheduleItem(
-            'Minum obat (pagi)', '9:00', Colors.pink, 'Rutinitas'),
-        _buildScheduleItem(
-            'Jalan Pagi di Taman', '10:00', Colors.blue, 'Kegiatan'),
-        _buildScheduleItem(
-            'Minum Obat (sore)', '17:30', Colors.pink, 'Rutinitas'),
-      ],
+          Column(
+            children: jadwals.map((jadwal) {
+              return ScheduleWidget(
+                  title: jadwal!.nama!,
+                  time: jadwal.eventAt!,
+                  color: jadwal.tipe! == 'Rutinitas'
+                      ? const Color(0xFFD298C2)
+                      : const Color(0xFF7C93C2),
+                  type: jadwal.tipe!,
+                  isToday: false,);
+            }).toList(),
+          ),
+        ],
+      ),
     );
   }
-}
-
-Widget _buildScheduleItem(String title, String time, Color color, String type) {
-  return Container(
-    margin: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(10),
-      color: Colors.white,
-      boxShadow: const [
-        BoxShadow(
-          color: Colors.black26,
-          blurRadius: 4,
-          spreadRadius: 1,
-          offset: Offset(0, 4),
-        )
-      ],
-    ),
-    child: Row(
-      children: [
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: GoogleFonts.istokWeb(
-                    fontWeight: FontWeight.bold, fontSize: 14),
-              ),
-              Row(
-                children: [
-                  Container(
-                    width: 18,
-                    height: 18,
-                    decoration: BoxDecoration(
-                      color: color,
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                  SizedBox(
-                    width: 8,
-                  ),
-                  Text(
-                    type,
-                    style: GoogleFonts.montserrat(
-                        fontWeight: FontWeight.w400, fontSize: 11),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-        Text(
-          time,
-          style:
-              GoogleFonts.montserrat(fontWeight: FontWeight.w400, fontSize: 11),
-        ),
-        const SizedBox(
-          width: 8,
-        ),
-        const Icon(Icons.keyboard_arrow_down),
-      ],
-    ),
-  );
 }
