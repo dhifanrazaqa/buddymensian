@@ -8,6 +8,7 @@ import 'package:buddymensia/screens/home/home_screen.dart';
 import 'package:buddymensia/screens/profile/profile_screen.dart';
 import 'package:buddymensia/screens/safezone/safezone_screen.dart';
 import 'package:buddymensia/services/auth_services.dart';
+import 'package:buddymensia/services/guessme_services.dart';
 import 'package:buddymensia/services/jadwal_services.dart';
 import 'package:buddymensia/services/post_services.dart';
 import 'package:flutter/material.dart';
@@ -58,6 +59,7 @@ class _MainScreenState extends State<MainScreen> {
     Provider.of<AuthService>(context, listen: false).getUser();
     Provider.of<PostServices>(context, listen: false).fetchData();
     Provider.of<JadwalServices>(context, listen: false).fetchData();
+    Provider.of<GuessMeService>(context, listen: false).fetchData();
     super.initState();
   }
 
