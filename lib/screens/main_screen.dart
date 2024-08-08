@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:buddymensia/colors.dart';
 import 'package:buddymensia/models/user.dart';
-import 'package:buddymensia/screens/gallery/gallery_screen.dart';
+import 'package:buddymensia/screens/guessme/guess_me_screen.dart';
 import 'package:buddymensia/screens/home/add_post_screen.dart';
 import 'package:buddymensia/screens/home/home_screen.dart';
 import 'package:buddymensia/screens/profile/profile_screen.dart';
@@ -29,7 +29,7 @@ class _MainScreenState extends State<MainScreen> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     const HomeScreen(),
-    const GalleryScreen(),
+    const GuessMeScreen(),
     const SafezoneScreen(),
     const ProfileScreen(),
   ];
