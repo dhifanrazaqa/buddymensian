@@ -70,13 +70,14 @@ class GuessMeScreen extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(
-                left: 8,
-                right: 8,
+                left: 24,
+                right: 24,
                 top: 8,
                 bottom: 16,
               ),
               child: persons.isEmpty ? Center(child: NoDataWidget()) : GridView.count(
                 crossAxisCount: 2,
+                crossAxisSpacing: 10,
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
                 children: persons.map((person) {

@@ -1,7 +1,6 @@
-import 'dart:math';
-
 import 'package:buddymensia/colors.dart';
 import 'package:buddymensia/models/guess_me.dart';
+import 'package:buddymensia/screens/guessme/detect_screen.dart';
 import 'package:buddymensia/widgets/buttons/outlined_btn_widget.dart';
 import 'package:buddymensia/widgets/buttons/primary_btn_widget.dart';
 import 'package:buddymensia/widgets/textfields/general_textfield_widget.dart';
@@ -308,8 +307,16 @@ class _KuisGuessMeScreenState extends State<KuisGuessMeScreen> {
                               child: PrimaryBtnWidget(
                                 buttonText: 'Ambil Gambar',
                                 color: AppColors.hijauTuaSecondary,
-                                handler: () {
-                                  print('clicked');
+                                handler: () async {
+                                  final ans = await Navigator.of(context).push(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              TextRecognitionPage()));
+                                  if (ans != null) {
+                                    setState(() {
+                                      _answerController.text = ans;
+                                    });
+                                  }
                                 },
                               ),
                             ),
