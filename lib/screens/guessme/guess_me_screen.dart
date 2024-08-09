@@ -1,15 +1,21 @@
 import 'package:buddymensia/colors.dart';
+import 'package:buddymensia/models/guess_me.dart';
 import 'package:buddymensia/screens/guessme/add_guess_me_screen.dart';
 import 'package:buddymensia/screens/guessme/detail_guess_me_screen.dart';
+import 'package:buddymensia/services/guessme_services.dart';
 import 'package:buddymensia/widgets/buttons/primary_btn_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 
 class GuessMeScreen extends StatelessWidget {
   const GuessMeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    GuessMeService guessMeProvider = Provider.of<GuessMeService>(context);
+    List<GuessMe?> persons = guessMeProvider.items;
+
     return Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -62,16 +68,21 @@ class GuessMeScreen extends StatelessWidget {
         ),
         body: Stack(
           children: [
-
             Padding(
               padding: const EdgeInsets.only(
-                left: 8,
-                right: 8,
+                left: 24,
+                right: 24,
                 top: 8,
                 bottom: 16,
               ),
-              child: Center(
-                child: GuessMeGridView(),
+              child: persons.isEmpty ? Center(child: NoDataWidget()) : GridView.count(
+                crossAxisCount: 2,
+                crossAxisSpacing: 10,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                children: persons.map((person) {
+                  return GuessMeGridView(person: person!);
+                }).toList(),
               ),
             ),
 
@@ -141,132 +152,69 @@ Widget NoDataWidget() {
   );
 }
 
-class GuessMeGridView extends StatefulWidget {
-  const GuessMeGridView({Key? key}) : super(key: key);
-
-  @override
-  State<GuessMeGridView> createState() => _GuessMeGridViewState();
-}
-
-class _GuessMeGridViewState extends State<GuessMeGridView> {
-  List<Map<String, String>> items = [
-    {
-      "name": "Alice",
-      "relation": "teman",
-      "photo": "assets/images/logo/Logo v1.png"
-    },
-    {
-      "name": "Bob",
-      "relation": "teman",
-      "photo": "assets/images/addphoto_Illustration.png"
-    },
-    {
-      "name": "Charlie",
-      "relation": "teman",
-      "photo": "assets/images/nodata_illustration.png"
-    },
-    {
-      "name": "David",
-      "relation": "teman",
-      "photo": "assets/images/placeholder_guessme.png"
-    },
-    {
-      "name": "Eve",
-      "relation": "teman",
-      "photo": "assets/images/placeholder_guessme.png"
-    },
-    {
-      "name": "Frank",
-      "relation": "teman",
-      "photo": "assets/images/placeholder_guessme.png"
-    },
-    {
-      "name": "Alice",
-      "relation": "teman",
-      "photo": "assets/images/logo/Logo v1.png"
-    },
-    {
-      "name": "Bob",
-      "relation": "teman",
-      "photo": "assets/images/addphoto_Illustration.png"
-    },
-    {
-      "name": "Charlie",
-      "relation": "teman",
-      "photo": "assets/images/nodata_illustration.png"
-    },
-  ];
+class GuessMeGridView extends StatelessWidget {
+  final GuessMe person;
+  const GuessMeGridView({super.key, required this.person});
 
   @override
   Widget build(BuildContext context) {
-    return GridView.builder(
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 5.0,
-        mainAxisSpacing: 5.0,
-      ),
-      itemCount: items.length,
-      itemBuilder: (BuildContext context, int index) {
-        return GestureDetector(
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => GuessMeDetail(
-                  item: items[index],
-                ),
-              ),
-            );
-          },
-          child: Card(
-              color: Colors.white,
-              child: Stack(
-                children: <Widget>[
-                  Align(
-                      alignment: Alignment.topCenter,
-                      child: Column(
-                        children: [
-                          Container(
-                            height: 100,
-                            width: 200,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.only(
-                                topLeft: Radius.circular(10),
-                                topRight: Radius.circular(10),
-                              ),
-                              child: Image.asset(
-                                items[index]['photo']!,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 16,
-                          ),
-                          Text(
-                            items[index]['name']!,
-                            style: GoogleFonts.montserrat(
-                                textStyle: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                            )),
-                          ),
-                          Text(
-                            items[index]['relation']!,
-                            style: GoogleFonts.montserrat(
-                                textStyle: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              color: AppColors.abuTua,
-                            )),
-                          ),
-                        ],
-                      ))
-                ],
-              )),
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => GuessMeDetail(
+              person: person,
+            ),
+          ),
         );
       },
+      child: Card(
+          color: Colors.white,
+          child: Stack(
+            children: <Widget>[
+              Align(
+                  alignment: Alignment.topCenter,
+                  child: Column(
+                    children: [
+                      Container(
+                        height: 100,
+                        width: 200,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10),
+                          ),
+                          child: Image.network(
+                            person.imageUrl!,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Text(
+                        person.nama!,
+                        style: GoogleFonts.montserrat(
+                            textStyle: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w700,
+                        )),
+                      ),
+                      Text(
+                        person.status!,
+                        style: GoogleFonts.montserrat(
+                            textStyle: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: AppColors.abuTua,
+                        )),
+                      ),
+                    ],
+                  ))
+            ],
+          )),
     );
   }
 }
-

@@ -3,6 +3,7 @@ import 'package:buddymensia/firebase_options.dart';
 import 'package:buddymensia/screens/auth/login_screen.dart';
 import 'package:buddymensia/screens/main_screen.dart';
 import 'package:buddymensia/services/auth_services.dart';
+import 'package:buddymensia/services/guessme_services.dart';
 import 'package:buddymensia/services/jadwal_services.dart';
 import 'package:buddymensia/services/post_services.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -52,6 +53,7 @@ class _MyAppState extends State<MyApp> {
         ChangeNotifierProvider(create: (context) => AuthService()),
         ChangeNotifierProvider(create: (context) => PostServices()),
         ChangeNotifierProvider(create: (context) => JadwalServices()),
+        ChangeNotifierProvider(create: (context) => GuessMeService()),
       ],
       child: MaterialApp(
         title: 'Buddymensia',
