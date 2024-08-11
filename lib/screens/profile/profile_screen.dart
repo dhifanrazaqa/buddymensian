@@ -2,6 +2,7 @@ import 'package:buddymensia/colors.dart';
 import 'package:buddymensia/models/user.dart';
 import 'package:buddymensia/screens/auth/login_screen.dart';
 import 'package:buddymensia/services/auth_services.dart';
+import 'package:buddymensia/widgets/buttons/primary_btn_widget.dart';
 import 'package:buddymensia/widgets/profile/profile_header_widget.dart';
 import 'package:buddymensia/widgets/profile/profile_posts_widget.dart';
 import 'package:buddymensia/widgets/profile/profile_schedule_widget.dart';
@@ -42,18 +43,39 @@ class ProfileScreen extends StatelessWidget {
                 name: user!.fullname!,
               ),
               const ProfileScheduleWidget(),
-              ElevatedButton(
-                  onPressed: () async {
-                    await authProvider.signOut();
-                    Navigator.of(context).popUntil((route) => route.isFirst);
-                    Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(
-                        builder: (context) => const LoginScreen(),
-                      ),
-                    );
-                  },
-                  child: Text('Logout')),
               const ProfilePostsWidget(),
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: SizedBox(
+                  height: 40,
+                  child: PrimaryBtnWidget(
+                      buttonText: user.role != 'user' ? 'Mode Pasien' : 'Mode Caregiver',
+                      color: user.role != 'user' ? AppColors.hijauTuaSecondary: AppColors.unguCaregiver,
+                      handler: () async {
+                        await authProvider.changeMode(user.role != 'user' ? 'user' : 'caregiver');
+                      }),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 16, right: 16, bottom: 16),
+                child: SizedBox(
+                  height: 40,
+                  child: PrimaryBtnWidget(
+                      buttonText: 'Logout',
+                      color: user.role == 'user' ? AppColors.hijauTuaSecondary : AppColors.unguCaregiver,
+                      handler: () async {
+                        await authProvider.signOut();
+                        Navigator.of(context)
+                            .popUntil((route) => route.isFirst);
+                        Navigator.of(context).pushReplacement(
+                          MaterialPageRoute(
+                            builder: (context) => const LoginScreen(),
+                          ),
+                        );
+                      }),
+                ),
+              ),
+              const SizedBox(height: 20,)
             ],
           ),
         ),

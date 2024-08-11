@@ -72,8 +72,8 @@ class _KuisGuessMeScreenState extends State<KuisGuessMeScreen> {
         case 'Siapakah nama Dia?':
           if (userAnswer.toLowerCase() == widget.person.nama!.toLowerCase()) {
             _currentAnswer = 0;
-            Future.delayed(const Duration(seconds: 5), () {
-              Future.delayed(const Duration(seconds: 5), () {
+            Future.delayed(const Duration(seconds: 3), () {
+              Future.delayed(const Duration(seconds: 3), () {
                 nextQuestion();
               });
             });
@@ -90,7 +90,7 @@ class _KuisGuessMeScreenState extends State<KuisGuessMeScreen> {
                   .format(widget.person.date!)
                   .toLowerCase()) {
             _currentAnswer = 0;
-            Future.delayed(const Duration(seconds: 5), () {
+            Future.delayed(const Duration(seconds: 3), () {
               nextQuestion();
             });
           } else {
@@ -104,7 +104,7 @@ class _KuisGuessMeScreenState extends State<KuisGuessMeScreen> {
         case 'Apa hubungan Anda dengannya?':
           if (userAnswer.toLowerCase() == widget.person.status!.toLowerCase()) {
             _currentAnswer = 0;
-            Future.delayed(const Duration(seconds: 5), () {
+            Future.delayed(const Duration(seconds: 3), () {
               nextQuestion();
             });
           } else {
@@ -117,7 +117,7 @@ class _KuisGuessMeScreenState extends State<KuisGuessMeScreen> {
         case 'Dimana domisili tempat tinggalnya?':
           if (userAnswer.toLowerCase() == widget.person.kota!.toLowerCase()) {
             _currentAnswer = 0;
-            Future.delayed(const Duration(seconds: 5), () {
+            Future.delayed(const Duration(seconds: 3), () {
               nextQuestion();
             });
           } else {
@@ -132,7 +132,7 @@ class _KuisGuessMeScreenState extends State<KuisGuessMeScreen> {
             final ans = containsValueIgnoreCase(question, userAnswer);
             if (ans == '') {
               _currentAnswer = 0;
-              Future.delayed(const Duration(seconds: 5), () {
+              Future.delayed(const Duration(seconds: 3), () {
                 nextQuestion();
               });
             } else {

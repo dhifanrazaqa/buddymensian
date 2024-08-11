@@ -11,7 +11,13 @@ import 'package:flutter_tts/flutter_tts.dart';
 
 class SpeakScreen extends StatefulWidget {
   final Post post;
-  const SpeakScreen({super.key, required this.post});
+  final List<ChatMessage> chat;
+  final String setupVoice;
+  const SpeakScreen(
+      {super.key,
+      required this.post,
+      required this.chat,
+      required this.setupVoice});
 
   @override
   State<SpeakScreen> createState() => _SpeakScreenState();
@@ -28,7 +34,9 @@ class _SpeakScreenState extends State<SpeakScreen> {
   @override
   void initState() {
     super.initState();
+    _conversationHistory = widget.chat;
     _initSpeech();
+    _speak(widget.setupVoice);
   }
 
   Future<void> _speak(String text) async {
@@ -161,14 +169,14 @@ class _SpeakScreenState extends State<SpeakScreen> {
               width: width,
               alignment: Alignment.center,
               margin: const EdgeInsets.all(4),
-              padding: const EdgeInsets.all(4),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: const Color(0xFFD9D9D9)),
               child: Text(
                   // _recognizedText.isEmpty
-                      'Tekan tombol mikrofon untuk memulai percakapan',
-                      // : _recognizedText,
+                  'Tekan tombol mikrofon untuk memulai percakapan',
+                  // : _recognizedText,
                   style: GoogleFonts.istokWeb(
                       color: Colors.black54,
                       fontSize: 13,

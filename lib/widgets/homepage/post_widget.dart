@@ -1,7 +1,7 @@
 import 'package:buddymensia/models/post.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intl/intl.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class SocialMediaPost extends StatelessWidget {
   final Post post;
@@ -46,7 +46,7 @@ class SocialMediaPost extends StatelessWidget {
                   fontWeight: FontWeight.bold, fontSize: 16),
             ),
             subtitle: Text(
-              DateFormat('EEEE, d MMMM y', 'id_ID').format(post.createdAt!),
+              timeago.format(post.createdAt!, locale: 'id'),
               style: GoogleFonts.istokWeb(
                   fontWeight: FontWeight.w900,
                   fontSize: 16,

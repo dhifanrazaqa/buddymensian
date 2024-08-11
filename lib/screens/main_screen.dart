@@ -31,7 +31,7 @@ class _MainScreenState extends State<MainScreen> {
   static final List<Widget> _widgetOptions = <Widget>[
     const HomeScreen(),
     const GuessMeScreen(),
-    SafezoneScreen(),
+    const SafezoneScreen(),
     const ProfileScreen(),
   ];
 
@@ -94,30 +94,30 @@ class _MainScreenState extends State<MainScreen> {
                 IconButton(
                   icon: const Icon(Icons.home),
                   color: _selectedIndex == 0
-                      ? Colors.teal
-                      : Colors.teal.withOpacity(0.5),
+                      ? user.role != 'user' ? AppColors.unguCaregiver : Colors.teal
+                      : user.role != 'user' ? AppColors.unguCaregiver.withOpacity(0.5) : Colors.teal.withOpacity(0.5),
                   onPressed: () => _onItemTapped(0),
                 ),
                 IconButton(
                   icon: const Icon(Icons.dashboard),
                   color: _selectedIndex == 1
-                      ? Colors.teal
-                      : Colors.teal.withOpacity(0.5),
+                      ? user.role != 'user' ? AppColors.unguCaregiver : Colors.teal 
+                      : user.role != 'user' ? AppColors.unguCaregiver.withOpacity(0.5) : Colors.teal.withOpacity(0.5),
                   onPressed: () => _onItemTapped(1),
                 ),
-                const SizedBox(width: 48.0),
+                user.role != 'user' ? Container() : const SizedBox(width: 48.0),
                 IconButton(
                   icon: const Icon(Icons.location_on),
                   color: _selectedIndex == 2
-                      ? Colors.teal
-                      : Colors.teal.withOpacity(0.5),
+                      ? user.role != 'user' ? AppColors.unguCaregiver : Colors.teal
+                      : user.role != 'user' ? AppColors.unguCaregiver.withOpacity(0.5) : Colors.teal.withOpacity(0.5),
                   onPressed: () => _onItemTapped(2),
                 ),
                 IconButton(
                   icon: const Icon(Icons.person),
                   color: _selectedIndex == 3
-                      ? Colors.teal
-                      : Colors.teal.withOpacity(0.5),
+                      ? user.role != 'user' ? AppColors.unguCaregiver : Colors.teal
+                      : user.role != 'user' ? AppColors.unguCaregiver.withOpacity(0.5) : Colors.teal.withOpacity(0.5),
                   onPressed: () => _onItemTapped(3),
                 ),
               ],
@@ -125,7 +125,7 @@ class _MainScreenState extends State<MainScreen> {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton: Container(
+        floatingActionButton: user.role != 'user' ? null : Container(
           margin: const EdgeInsets.only(top: 4),
           decoration: const BoxDecoration(
             shape: BoxShape.circle,

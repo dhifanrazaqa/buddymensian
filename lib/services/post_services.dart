@@ -36,8 +36,11 @@ class PostServices with ChangeNotifier {
         'judul': post.judul,
         'caption': post.caption,
         'createdAt': post.createdAt,
+        'date': post.date,
         'imageUrl': downloadUrl,
         'userId': user!.id,
+        'anggotaKeluarga': post.anggotaKeluarga,
+        'kataMemory': post.kataMemory
       });
 
       fetchData();
@@ -55,7 +58,7 @@ class PostServices with ChangeNotifier {
 
       QuerySnapshot querySnapshot = await _firebaseFirestore
           .collection('post')
-          .orderBy('createdAt', descending: true)
+          .orderBy('date', descending: false)
           .get();
 
       for (DocumentSnapshot doc in querySnapshot.docs) {
@@ -64,9 +67,12 @@ class PostServices with ChangeNotifier {
           judul: doc['judul'] ?? '',
           caption: doc['caption'] ?? '',
           createdAt: (doc['createdAt'] as Timestamp).toDate(),
+          date: (doc['date'] as Timestamp).toDate(),
           imageUrl: doc['imageUrl'] ?? '',
           userId: doc['userId'] ?? '',
           author: await getUserData(id: doc['userId']) as user_data.User,
+          anggotaKeluarga: doc['anggotaKeluarga'] ?? [],
+          kataMemory: doc['kataMemory'] ?? []
         );
 
         _items.add(post);

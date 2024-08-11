@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
@@ -27,7 +26,7 @@ class _TextRecognitionPageState extends State<TextRecognitionPage> {
     _camera = cameras.first;
     _cameraController = CameraController(
       _camera,
-      ResolutionPreset.medium,
+      ResolutionPreset.high,
     );
 
     _initializeControllerFuture = _cameraController.initialize();
@@ -51,35 +50,16 @@ class _TextRecognitionPageState extends State<TextRecognitionPage> {
     }
   }
 
-  Future<void> _pickImageFromGallery() async {
-    final picker = ImagePicker();
-    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-    if (pickedFile != null) {
-      setState(() {
-        _imageFile = XFile(pickedFile.path);
-      });
-      await _performTextRecognition();
-    }
-  }
-
   Future<void> _performTextRecognition() async {
     if (_imageFile == null) return;
     final inputImage = InputImage.fromFilePath(_imageFile!.path);
     final textRecognizer = TextRecognizer();
-    final RecognizedText recognizedText = await textRecognizer.processImage(inputImage);
+    final RecognizedText recognizedText =
+        await textRecognizer.processImage(inputImage);
     await textRecognizer.close();
 
     Navigator.of(context).pop(recognizedText.text);
     // _showTextRecognitionDialog(recognizedText.text);
-  }
-
-  void _showTextRecognitionDialog(String recognizedText) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => TextResultPage(recognizedText: recognizedText),
-      ),
-    );
   }
 
   @override
@@ -90,54 +70,30 @@ class _TextRecognitionPageState extends State<TextRecognitionPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Text Recognition'),
-      ),
-      body: Column(
-        children: [
-          Expanded(
-            child: _isCameraInitialized
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: Stack(
+          children: [
+            _isCameraInitialized
                 ? CameraPreview(_cameraController)
                 : Center(child: CircularProgressIndicator()),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ElevatedButton(
-                onPressed: _captureImage,
-                child: Icon(Icons.camera_alt),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: const EdgeInsets.all(
+                    16.0), // Padding di sekitar floating button
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    shape: CircleBorder(),
+                    padding: EdgeInsets.all(16)
+                  ),
+                  onPressed: _captureImage,
+                  child: Icon(Icons.camera_alt, color: Colors.black),
+                ),
               ),
-              ElevatedButton(
-                onPressed: _pickImageFromGallery,
-                child: Icon(Icons.image),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class TextResultPage extends StatelessWidget {
-  final String recognizedText;
-
-  TextResultPage({required this.recognizedText});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Recognized Text'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Text(
-            recognizedText.isEmpty ? 'No text found' : recognizedText,
-            style: TextStyle(fontSize: 16),
-          ),
+            ),
+          ],
         ),
       ),
     );

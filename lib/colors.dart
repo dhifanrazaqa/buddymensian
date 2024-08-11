@@ -11,4 +11,5 @@ class AppColors {
   static const Color hijauTuaSecondary = Color(0xFF2A9E9E);
   static const Color hijauMuda = Color(0xFFB1D7D8);
   static const Color putihHijau = Color(0xFFEFFBF9);
+  static const Color unguCaregiver = Color(0xFF694F8E);
 }

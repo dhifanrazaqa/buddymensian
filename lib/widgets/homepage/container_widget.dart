@@ -6,11 +6,13 @@ class ContainerWidget extends StatelessWidget {
   final String title;
   final String value;
   final double width;
+  final String role;
   const ContainerWidget(
       {super.key,
       required this.title,
       required this.value,
-      required this.width});
+      required this.width,
+      required this.role});
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +30,7 @@ class ContainerWidget extends StatelessWidget {
           ],
           shape: BoxShape.rectangle,
           borderRadius: BorderRadius.circular(20),
-          color: AppColors.hijauTuaSecondary),
+          color: role == 'user' ? AppColors.hijauTuaSecondary : AppColors.unguCaregiver),
       child: Column(
         children: [
           Text(

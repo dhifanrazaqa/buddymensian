@@ -1,7 +1,9 @@
 import 'package:buddymensia/colors.dart';
 import 'package:buddymensia/models/guess_me.dart';
+import 'package:buddymensia/models/user.dart';
 import 'package:buddymensia/screens/guessme/add_guess_me_screen.dart';
 import 'package:buddymensia/screens/guessme/detail_guess_me_screen.dart';
+import 'package:buddymensia/services/auth_services.dart';
 import 'package:buddymensia/services/guessme_services.dart';
 import 'package:buddymensia/widgets/buttons/primary_btn_widget.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +17,9 @@ class GuessMeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     GuessMeService guessMeProvider = Provider.of<GuessMeService>(context);
     List<GuessMe?> persons = guessMeProvider.items;
+
+    AuthService authProvider = Provider.of<AuthService>(context);
+    User? user = authProvider.user;
 
     return Scaffold(
         backgroundColor: Colors.white,
@@ -30,7 +35,7 @@ class GuessMeScreen extends StatelessWidget {
                     Text(
                       'Guess Me',
                       style: GoogleFonts.montserrat(
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w700,
                       )),
@@ -38,7 +43,7 @@ class GuessMeScreen extends StatelessWidget {
                     Text(
                       'Silahkan Tambahkan dan Pilih Data',
                       style: GoogleFonts.montserrat(
-                          textStyle: TextStyle(
+                          textStyle: const TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w400,
                       )),
@@ -75,15 +80,17 @@ class GuessMeScreen extends StatelessWidget {
                 top: 8,
                 bottom: 16,
               ),
-              child: persons.isEmpty ? Center(child: NoDataWidget()) : GridView.count(
-                crossAxisCount: 2,
-                crossAxisSpacing: 10,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                children: persons.map((person) {
-                  return GuessMeGridView(person: person!);
-                }).toList(),
-              ),
+              child: persons.isEmpty
+                  ? Center(child: NoDataWidget())
+                  : GridView.count(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 10,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: persons.map((person) {
+                        return GuessMeGridView(person: person!);
+                      }).toList(),
+                    ),
             ),
 
             //Tampilan Ketika Tidak Ada Data
@@ -96,15 +103,15 @@ class GuessMeScreen extends StatelessWidget {
               alignment: Alignment.bottomCenter,
               child: Column(
                 children: [
-                  Spacer(),
+                  const Spacer(),
                   Padding(
-                      padding: EdgeInsets.all(8),
+                      padding: const EdgeInsets.all(8),
                       child: SizedBox(
                         width: 250,
                         height: 40,
                         child: PrimaryBtnWidget(
                           buttonText: 'Tambahkan Data Guess Me',
-                          color: AppColors.hijauTuaSecondary,
+                          color: user!.role == 'user' ? AppColors.hijauTuaSecondary : AppColors.unguCaregiver,
                           handler: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) =>
@@ -112,7 +119,7 @@ class GuessMeScreen extends StatelessWidget {
                           },
                         ),
                       )),
-                  SizedBox(
+                  const SizedBox(
                     height: 30,
                   ),
                 ],
@@ -134,7 +141,7 @@ Widget NoDataWidget() {
       Text(
         'Belum Ada Data Yang Ditambahkan',
         style: GoogleFonts.montserrat(
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
           fontSize: 14,
           fontWeight: FontWeight.w800,
           color: AppColors.hijauTuaSecondary,
@@ -143,7 +150,7 @@ Widget NoDataWidget() {
       Text(
         'Silahkan Tambahkan Data Yang Ditambahkan',
         style: GoogleFonts.montserrat(
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
           fontSize: 10,
           fontWeight: FontWeight.w400,
         )),
@@ -171,50 +178,48 @@ class GuessMeGridView extends StatelessWidget {
       },
       child: Card(
           color: Colors.white,
-          child: Stack(
-            children: <Widget>[
-              Align(
-                  alignment: Alignment.topCenter,
-                  child: Column(
-                    children: [
-                      Container(
-                        height: 100,
-                        width: 200,
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                          ),
-                          child: Image.network(
-                            person.imageUrl!,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
+          child: Align(
+              alignment: Alignment.topCenter,
+              child: Column(
+                children: [
+                  ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(10),
+                      topRight: Radius.circular(10),
+                    ),
+                    child: SizedBox(
+                      height: 90,
+                      width: 200,
+                      child: Image.network(
+                        person.imageUrl!,
+                        fit: BoxFit.cover,
                       ),
-                      SizedBox(
-                        height: 16,
-                      ),
-                      Text(
-                        person.nama!,
-                        style: GoogleFonts.montserrat(
-                            textStyle: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700,
-                        )),
-                      ),
-                      Text(
-                        person.status!,
-                        style: GoogleFonts.montserrat(
-                            textStyle: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: AppColors.abuTua,
-                        )),
-                      ),
-                    ],
-                  ))
-            ],
-          )),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(2),
+                    child: Text(
+                      person.nama!,
+                      overflow: TextOverflow.ellipsis,
+                      softWrap: true,
+                      style: GoogleFonts.montserrat(
+                          textStyle: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      )),
+                    ),
+                  ),
+                  Text(
+                    person.status!,
+                    style: GoogleFonts.montserrat(
+                        textStyle: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: AppColors.abuTua,
+                    )),
+                  ),
+                ],
+              ))),
     );
   }
 }

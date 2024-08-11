@@ -38,20 +38,25 @@ class HeaderHomeWidget extends StatelessWidget {
                 const SizedBox(
                   width: 8,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Good morning, $name!',
-                      style: GoogleFonts.montserrat(
-                          fontWeight: FontWeight.w600, fontSize: 16),
-                    ),
-                    Text(
-                      username,
-                      style: GoogleFonts.istokWeb(
-                          fontWeight: FontWeight.w300, fontSize: 12),
-                    ),
-                  ],
+                SizedBox(
+                  width: width * 0.65,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Good morning, $name!',
+                        overflow: TextOverflow.ellipsis,
+                        softWrap: true,
+                        style: GoogleFonts.montserrat(
+                            fontWeight: FontWeight.w600, fontSize: 16),
+                      ),
+                      Text(
+                        username,
+                        style: GoogleFonts.istokWeb(
+                            fontWeight: FontWeight.w300, fontSize: 12),
+                      ),
+                    ],
+                  ),
                 ),
                 const Spacer(),
                 CircleAvatar(

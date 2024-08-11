@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:buddymensia/models/user.dart' as user_data;
 
@@ -33,7 +34,7 @@ class AuthService with ChangeNotifier {
           email: email,
           fullname: fullname,
           kodeUnik: '',
-          role: '');
+          role: 'user');
 
       notifyListeners();
       return 'Success';
@@ -126,6 +127,45 @@ class AuthService with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> changeMode(String role) async {
+    try {
+      await getCurrentUserReference().update({
+        'role': role,
+      });
+
+      _user = await getUserData();
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> updateRadius(int radius) async {
+    try {
+      await getCurrentUserReference().update({
+        'radius': radius,
+      });
+
+      _user = await getUserData();
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  Future<void> updateLocation(LatLng location) async {
+    try {
+      await getCurrentUserReference().update({
+        'location': GeoPoint(location.latitude, location.longitude),
+      });
+
+      _user = await getUserData();
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
+
   Future<user_data.User?> getUserData() async {
     DocumentSnapshot documentSnapshot = await getCurrentUserReference().get();
     if (documentSnapshot.exists) {
@@ -136,7 +176,9 @@ class AuthService with ChangeNotifier {
           email: userData['email'],
           fullname: userData['fullname'],
           kodeUnik: userData['kodeUnik'],
-          role: userData['role']);
+          role: userData['role'],
+          radius: userData['radius'],
+          location: LatLng(userData['location'].latitude, userData['location'].longitude));
     } else {
       return null;
     }
@@ -158,7 +200,9 @@ class AuthService with ChangeNotifier {
       'fullname': fullname,
       'email': email,
       'kodeUnik': kodeUnik,
-      'role': role
+      'role': role,
+      'radius': 100,
+      'location': const GeoPoint(-6.315687282015746, 106.79435478845504)
     });
   }
 
