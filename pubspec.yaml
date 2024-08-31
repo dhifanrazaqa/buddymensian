@@ -57,6 +57,8 @@ dependencies:
   geocoding: ^3.0.0
   timeago: ^3.7.0
   flutter_launcher_icons: ^0.13.1
+  fl_chart: ^0.69.0
+  flutter_local_notifications: ^17.2.2
 
 dev_dependencies:
   flutter_test:

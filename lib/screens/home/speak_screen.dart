@@ -41,7 +41,7 @@ class _SpeakScreenState extends State<SpeakScreen> {
 
   Future<void> _speak(String text) async {
     await _flutterTts.setLanguage("id-ID");
-    await _flutterTts.setSpeechRate(0.8);
+    await _flutterTts.setSpeechRate(0.7);
     await _flutterTts.setVolume(1.0);
     await _flutterTts.setPitch(1.0);
     await _flutterTts.speak(text);
@@ -68,6 +68,13 @@ class _SpeakScreenState extends State<SpeakScreen> {
 
   void process() async {
     if (_recognizedText.isNotEmpty) {
+      if (_recognizedText.toLowerCase().contains("terima kasih")) {
+        await _speak('Terima Kasih Kembali sudah menggunakan Buddymensia!');
+
+        Navigator.of(context).pop();
+        return;
+      }
+
       _conversationHistory
           .add(ChatMessage(role: 'user', content: _recognizedText));
 
@@ -92,11 +99,13 @@ class _SpeakScreenState extends State<SpeakScreen> {
           _recognizedText = '';
         });
         await _speech.listen(
-          onResult: (result) {
+          onResult: (result) async {
             if (mounted) {
               setState(() {
                 _recognizedText = result.recognizedWords;
               });
+
+              print(_recognizedText);
             }
           },
           localeId: 'id_ID',

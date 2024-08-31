@@ -164,233 +164,255 @@ class _SafezoneScreenState extends State<SafezoneScreen> {
             children: [
               const Spacer(),
               CircleAvatar(
-                  backgroundColor: Colors.blue[50],
-                  child: const Icon(
+                  backgroundColor: user!.role == 'user'
+                      ? Colors.blue[50]
+                      : Colors.purple[50],
+                  child: Icon(
                     Icons.notifications,
-                    color: AppColors.hijauTuaPrimary,
+                    color: user.role == 'user'
+                        ? AppColors.hijauTuaPrimary
+                        : AppColors.unguCaregiver,
                   )),
             ],
           ),
         ),
       ),
       body: _currentPosition == null
-          ? const Center(
+          ? Center(
               child: CircularProgressIndicator(
-              color: AppColors.hijauTuaSecondary,
+              color: user.role == 'user'
+                  ? AppColors.hijauTuaSecondary
+                  : AppColors.unguCaregiver,
             ))
-          : Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 36.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    user!.role != 'user'
-                        ? Row(
-                            children: [
-                              const Icon(
-                                Icons.location_on,
-                                color: AppColors.unguCaregiver,
-                              ),
-                              const SizedBox(
-                                width: 6,
-                              ),
-                              Text(
-                                'Pilih Titik Zona Aman',
-                                style: GoogleFonts.montserrat(
-                                    decoration: TextDecoration.underline,
-                                    color: AppColors.unguCaregiver,
-                                    fontSize: 14),
-                              ),
-                            ],
-                          )
-                        : Container(),
-                    SizedBox(
-                      width: width,
-                      height: 12,
-                    ),
-                    Container(
-                      alignment: Alignment.center,
-                      decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                              topLeft: Radius.circular(16),
-                              topRight: Radius.circular(16)),
-                          border:
-                              Border.all(color: AppColors.hijauTuaSecondary)),
-                      child: Text(
-                        _distanceInMeters > _radius
-                            ? 'Anda Berada di Luar Zona'
-                            : 'Anda Berada di Zona Aman',
-                        style: GoogleFonts.montserrat(
-                            fontSize: 16, color: AppColors.hijauTuaSecondary),
-                      ),
-                    ),
-                    Stack(
-                      alignment: Alignment.bottomCenter,
-                      children: [
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 3,
-                                spreadRadius: 2,
-                                offset: Offset(0, 2),
-                              )
-                            ],
-                          ),
-                          height: user.role != 'user'
-                              ? height * 0.38
-                              : height * 0.5,
-                          child: GoogleMap(
-                            initialCameraPosition: CameraPosition(
-                              target: LatLng(_currentPosition!.latitude,
-                                  _currentPosition!.longitude),
-                              zoom: 16,
-                            ),
-                            gestureRecognizers: {
-                              Factory<OneSequenceGestureRecognizer>(
-                                  () => EagerGestureRecognizer())
-                            },
-                            zoomControlsEnabled: false,
-                            myLocationEnabled: true,
-                            onMapCreated: (GoogleMapController controller) {
-                              _mapController = controller;
-                            },
-                            markers: {
-                              Marker(
-                                markerId: const MarkerId('targetMarker'),
-                                position: targetLocation,
-                                icon: BitmapDescriptor.defaultMarkerWithHue(
-                                    BitmapDescriptor.hueAzure),
-                                infoWindow: InfoWindow(
-                                  title: 'Target Location',
-                                  snippet:
-                                      _targetAddress, // Menampilkan alamat sebagai snippet
-                                ),
-                              ),
-                            },
-                            onTap: user.role != 'user' ? _onMapTap : null,
-                            circles: _circle != null ? {_circle!} : {},
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(16)),
-                            padding: const EdgeInsets.all(8.0),
-                            child: Text(
-                              _targetAddress,
-                              style: TextStyle(fontSize: 16),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    user.role != 'user'
-                        ? Form(
-                            key: _formKey,
-                            child: Column(
+          : Container(
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Colors.white, _distanceInMeters > _radius ? Colors.red[100]! : Colors.green[100]!, Colors.white],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 36.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      user.role != 'user'
+                          ? Row(
                               children: [
-                                GeneralTextfieldWidget(
-                                  hintText: '100',
-                                  inputType: TextInputType.number,
-                                  isRequired: true,
-                                  controller: _radiusController,
-                                  labelText: 'Batas Zona',
-                                  icon: Icons.gps_fixed,
+                                const Icon(
+                                  Icons.location_on,
+                                  color: AppColors.unguCaregiver,
                                 ),
                                 const SizedBox(
-                                  height: 12,
+                                  width: 6,
                                 ),
-                                _isLoading
-                                    ? const CircularProgressIndicator(
-                                        color: AppColors.hijauTuaSecondary,
-                                      )
-                                    : SizedBox(
-                                        height: 40,
-                                        child: PrimaryBtnWidget(
-                                            buttonText: 'Simpan',
-                                            color: AppColors.unguCaregiver,
-                                            handler: () async {
-                                              if (_formKey.currentState!
-                                                  .validate()) {
-                                                setState(() {
-                                                  _isLoading = true;
-                                                });
-                                                await authProvider.updateRadius(
-                                                    int.parse(_radiusController
-                                                        .text));
-                                                _determinePosition();
-                                                _radiusController.text = '';
-                                                setState(() {
-                                                  _isLoading = false;
-                                                });
-                                              }
-                                            }))
+                                Text(
+                                  'Pilih Titik Zona Aman',
+                                  style: GoogleFonts.montserrat(
+                                      decoration: TextDecoration.underline,
+                                      color: AppColors.unguCaregiver,
+                                      fontSize: 14),
+                                ),
+                              ],
+                            )
+                          : Container(),
+                      SizedBox(
+                        width: width,
+                        height: 12,
+                      ),
+                      Container(
+                        alignment: Alignment.center,
+                        decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(16),
+                                topRight: Radius.circular(16)),
+                            border: Border.all(
+                                color: user.role == 'user'
+                                    ? AppColors.hijauTuaSecondary
+                                    : AppColors.unguCaregiver)),
+                        child: Text(
+                          _distanceInMeters > _radius
+                              ? 'Anda Berada di Luar Zona'
+                              : 'Anda Berada di Zona Aman',
+                          style: GoogleFonts.montserrat(
+                              fontSize: 16,
+                              color: user.role == 'user'
+                                  ? AppColors.hijauTuaSecondary
+                                  : AppColors.unguCaregiver),
+                        ),
+                      ),
+                      Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 3,
+                                  spreadRadius: 2,
+                                  offset: Offset(0, 2),
+                                )
                               ],
                             ),
-                          )
-                        : Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              ElevatedButton(
-                                style: TextButton.styleFrom(
-                                    backgroundColor: _distanceInMeters > _radius
-                                        ? Colors.redAccent
-                                        : AppColors.hijauMuda),
-                                onPressed: _determinePosition,
-                                child: Text(
-                                  _distanceInMeters < _radius
-                                      ? '${(_radius - _distanceInMeters).toStringAsFixed(0)} meter dari batas zona'
-                                      : 'Diluar batas zona',
-                                  style: GoogleFonts.istokWeb(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.bold,
-                                      color: _distanceInMeters > _radius
-                                          ? Colors.white
-                                          : AppColors.hijauTuaSecondary),
-                                ),
+                            height: user.role != 'user'
+                                ? height * 0.38
+                                : height * 0.5,
+                            child: GoogleMap(
+                              initialCameraPosition: CameraPosition(
+                                target: LatLng(_currentPosition!.latitude,
+                                    _currentPosition!.longitude),
+                                zoom: 16,
                               ),
-                            ],
+                              gestureRecognizers: {
+                                Factory<OneSequenceGestureRecognizer>(
+                                    () => EagerGestureRecognizer())
+                              },
+                              zoomControlsEnabled: false,
+                              myLocationEnabled: true,
+                              onMapCreated: (GoogleMapController controller) {
+                                _mapController = controller;
+                              },
+                              markers: {
+                                Marker(
+                                  markerId: const MarkerId('targetMarker'),
+                                  position: targetLocation,
+                                  icon: BitmapDescriptor.defaultMarkerWithHue(
+                                      BitmapDescriptor.hueAzure),
+                                  infoWindow: InfoWindow(
+                                    title: 'Target Location',
+                                    snippet:
+                                        _targetAddress, // Menampilkan alamat sebagai snippet
+                                  ),
+                                ),
+                              },
+                              onTap: user.role != 'user' ? _onMapTap : null,
+                              circles: _circle != null ? {_circle!} : {},
+                            ),
                           ),
-                    const SizedBox(
-                      height: 12,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                              color: AppColors.abuMuda,
-                              borderRadius: BorderRadius.circular(8)),
-                          child: Text(
-                            'Lakukan panggilan darurat jika tersesat',
-                            style: GoogleFonts.istokWeb(
-                                fontSize: 10, fontWeight: FontWeight.w800),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(16)),
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                _targetAddress,
+                                style: TextStyle(fontSize: 16),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
                           ),
-                        ),
-                        IconButton(
-                            onPressed: () {},
-                            style: IconButton.styleFrom(
-                                backgroundColor: user.role != 'user'
-                                    ? AppColors.unguCaregiver
-                                    : AppColors.hijauTuaSecondary,
-                                padding: EdgeInsets.all(12)),
-                            icon: const Icon(
-                              Icons.call,
-                              color: Colors.white,
-                            ))
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      user.role != 'user'
+                          ? Form(
+                              key: _formKey,
+                              child: Column(
+                                children: [
+                                  GeneralTextfieldWidget(
+                                    hintText: '100',
+                                    inputType: TextInputType.number,
+                                    isRequired: true,
+                                    controller: _radiusController,
+                                    labelText: 'Batas Zona',
+                                    icon: Icons.gps_fixed,
+                                  ),
+                                  const SizedBox(
+                                    height: 12,
+                                  ),
+                                  _isLoading
+                                      ? const CircularProgressIndicator(
+                                          color: AppColors.hijauTuaSecondary,
+                                        )
+                                      : SizedBox(
+                                          height: 40,
+                                          child: PrimaryBtnWidget(
+                                              buttonText: 'Simpan',
+                                              color: AppColors.unguCaregiver,
+                                              handler: () async {
+                                                if (_formKey.currentState!
+                                                    .validate()) {
+                                                  setState(() {
+                                                    _isLoading = true;
+                                                  });
+                                                  await authProvider
+                                                      .updateRadius(int.parse(
+                                                          _radiusController
+                                                              .text));
+                                                  _determinePosition();
+                                                  _radiusController.text = '';
+                                                  setState(() {
+                                                    _isLoading = false;
+                                                  });
+                                                }
+                                              }))
+                                ],
+                              ),
+                            )
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                ElevatedButton(
+                                  style: TextButton.styleFrom(
+                                      backgroundColor:
+                                          _distanceInMeters > _radius
+                                              ? Colors.redAccent
+                                              : AppColors.hijauMuda),
+                                  onPressed: _determinePosition,
+                                  child: Text(
+                                    _distanceInMeters < _radius
+                                        ? '${(_radius - _distanceInMeters).toStringAsFixed(0)} meter dari batas zona'
+                                        : 'Diluar batas zona',
+                                    style: GoogleFonts.istokWeb(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        color: _distanceInMeters > _radius
+                                            ? Colors.white
+                                            : AppColors.hijauTuaSecondary),
+                                  ),
+                                ),
+                              ],
+                            ),
+                      const SizedBox(
+                        height: 12,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                                color: AppColors.abuMuda,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: Text(
+                              'Lakukan panggilan darurat jika tersesat',
+                              style: GoogleFonts.istokWeb(
+                                  fontSize: 10, fontWeight: FontWeight.w800),
+                            ),
+                          ),
+                          IconButton(
+                              onPressed: () {},
+                              style: IconButton.styleFrom(
+                                  backgroundColor: user.role != 'user'
+                                      ? AppColors.unguCaregiver
+                                      : AppColors.hijauTuaSecondary,
+                                  padding: EdgeInsets.all(12)),
+                              icon: const Icon(
+                                Icons.call,
+                                color: Colors.white,
+                              ))
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

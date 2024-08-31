@@ -9,12 +9,14 @@ class CalendarWidget extends StatefulWidget {
   final DateTime selectedDay;
   final List<Jadwal?> jadwals;
   final Function(DateTime, DateTime) handler;
+  final bool isUser;
   const CalendarWidget(
       {super.key,
       required this.focusedDay,
       required this.selectedDay,
       required this.handler,
-      required this.jadwals});
+      required this.jadwals,
+      required this.isUser});
 
   @override
   State<CalendarWidget> createState() => _CalendarWidgetState();
@@ -74,13 +76,16 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 formatButtonVisible: false,
                 titleCentered: true,
               ),
-              calendarStyle: const CalendarStyle(
+              calendarStyle: CalendarStyle(
                 todayDecoration: BoxDecoration(
-                  color: AppColors.hijauMuda,
+                  color:
+                      widget.isUser ? AppColors.hijauMuda : Colors.purple[100],
                   shape: BoxShape.circle,
                 ),
                 selectedDecoration: BoxDecoration(
-                  color: AppColors.hijauTuaSecondary,
+                  color: widget.isUser
+                      ? AppColors.hijauTuaSecondary
+                      : AppColors.unguCaregiver,
                   shape: BoxShape.circle,
                 ),
               ),
@@ -99,8 +104,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
             ),
             Row(
               children: [
-                const CircleAvatar(
-                  backgroundColor: AppColors.hijauMuda,
+                CircleAvatar(
+                  backgroundColor:
+                      widget.isUser ? AppColors.hijauMuda : Colors.purple[100],
                   radius: 10,
                 ),
                 const SizedBox(
@@ -116,8 +122,10 @@ class _CalendarWidgetState extends State<CalendarWidget> {
                 const SizedBox(
                   width: 16,
                 ),
-                const CircleAvatar(
-                  backgroundColor: AppColors.hijauTuaSecondary,
+                CircleAvatar(
+                  backgroundColor: widget.isUser
+                      ? AppColors.hijauTuaSecondary
+                      : AppColors.unguCaregiver,
                   radius: 10,
                 ),
                 const SizedBox(
@@ -143,9 +151,9 @@ class _CalendarWidgetState extends State<CalendarWidget> {
       width: 16.0,
       height: 16.0,
       margin: const EdgeInsets.symmetric(horizontal: 0.5),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: AppColors.hijauMuda,
+        color: widget.isUser ? AppColors.hijauMuda : Colors.purple[100],
       ),
     );
   }

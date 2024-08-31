@@ -12,7 +12,9 @@ import 'package:provider/provider.dart';
 
 class AddScheduleWidget extends StatefulWidget {
   final DateTime selectedDay;
-  const AddScheduleWidget({super.key, required this.selectedDay});
+  final bool isUser;
+  const AddScheduleWidget(
+      {super.key, required this.selectedDay, required this.isUser});
 
   @override
   State<AddScheduleWidget> createState() => _AddScheduleWidgetState();
@@ -131,24 +133,25 @@ class _AddScheduleWidgetState extends State<AddScheduleWidget> {
               ),
               const SizedBox(height: 24),
               _isLoading
-                  ? const CircularProgressIndicator(
-                      color: AppColors.hijauTuaSecondary,
+                  ? CircularProgressIndicator(
+                      color: widget.isUser ? AppColors.hijauTuaSecondary : AppColors.unguCaregiver,
                     )
                   : Column(
                       children: [
                         PrimaryBtnWidget(
                             buttonText: 'Simpan',
-                            color: AppColors.hijauTuaSecondary,
+                            color: widget.isUser ? AppColors.hijauTuaSecondary : AppColors.unguCaregiver,
                             handler: simpan),
                         const SizedBox(height: 8),
                         OutlinedBtnWidget(
-                          borderColor: AppColors.hijauTuaSecondary,
+                          borderColor: widget.isUser ? AppColors.hijauTuaSecondary : AppColors.unguCaregiver,
                           handler: cancel,
                           child: Text(
                             'Cancel',
                             style: GoogleFonts.istokWeb(
                               fontSize: 14,
                               fontWeight: FontWeight.w600,
+                              color: widget.isUser ? AppColors.hijauTuaSecondary : AppColors.unguCaregiver
                             ),
                           ),
                         )

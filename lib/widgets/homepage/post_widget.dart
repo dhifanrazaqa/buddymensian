@@ -1,3 +1,4 @@
+import 'package:buddymensia/colors.dart';
 import 'package:buddymensia/models/post.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,16 +6,20 @@ import 'package:timeago/timeago.dart' as timeago;
 
 class SocialMediaPost extends StatelessWidget {
   final Post post;
-  final int likes;
-  final int comments;
-  final int shares;
+  final bool isUser;
+  final bool isLiked;
+  final VoidCallback handlerLike;
+  final VoidCallback handlerComment;
+  final VoidCallback handlerShare;
 
   const SocialMediaPost({
     super.key,
     required this.post,
-    required this.likes,
-    required this.comments,
-    required this.shares,
+    required this.isUser,
+    required this.isLiked,
+    required this.handlerLike,
+    required this.handlerComment,
+    required this.handlerShare,
   });
 
   @override
@@ -37,8 +42,14 @@ class SocialMediaPost extends StatelessWidget {
         children: [
           ListTile(
             leading: CircleAvatar(
-              backgroundColor: Colors.teal[100],
-              child: Text(post.author.fullname![0]),
+              backgroundColor: isUser ? Colors.teal[100] : Colors.purple[50],
+              child: Text(
+                post.author.fullname![0],
+                style: GoogleFonts.montserrat(
+                    color: isUser
+                        ? AppColors.hijauTuaPrimary
+                        : AppColors.unguCaregiver),
+              ),
             ),
             title: Text(
               post.author.fullname!,
@@ -78,9 +89,13 @@ class SocialMediaPost extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildIconWithCount(Icons.favorite_border, likes),
-                _buildIconWithCount(Icons.chat_bubble_outline, comments),
-                _buildIconWithCount(Icons.share, shares),
+                _buildIconWithCount(
+                    isLiked ? Icons.favorite : Icons.favorite_border,
+                    post.likeCount.toString(),
+                    handlerLike),
+                _buildIconWithCount(Icons.chat_bubble_outline,
+                    post.commentCount.toString(), handlerComment),
+                _buildIconWithCount(Icons.share, '', handlerShare),
               ],
             ),
           ),
@@ -90,13 +105,28 @@ class SocialMediaPost extends StatelessWidget {
     );
   }
 
-  Widget _buildIconWithCount(IconData icon, int count) {
-    return Row(
-      children: [
-        Icon(icon, size: 20),
-        const SizedBox(width: 4),
-        Text(count.toString()),
-      ],
+  Widget _buildIconWithCount(
+      IconData icon, String count, VoidCallback handler) {
+    return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+          overlayColor:
+              isUser ? AppColors.hijauTuaSecondary : AppColors.unguCaregiver,
+          elevation: 0),
+      onPressed: handler,
+      child: Row(
+        children: [
+          Icon(
+            icon,
+            size: 20,
+            color: icon == Icons.favorite && isLiked ? isUser ? AppColors.hijauTuaSecondary : AppColors.unguCaregiver : Colors.black,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            count,
+            style: GoogleFonts.montserrat(color: Colors.black),
+          ),
+        ],
+      ),
     );
   }
 }

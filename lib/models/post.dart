@@ -11,6 +11,9 @@ class Post {
   User author;
   List<dynamic>? anggotaKeluarga;
   List<dynamic>? kataMemory;
+  int likeCount;
+  int commentCount;
+  bool? isLiked;
 
   Post({
     this.id,
@@ -22,6 +25,9 @@ class Post {
     this.userId,
     required this.author,
     this.anggotaKeluarga,
-    this.kataMemory
+    this.kataMemory,
+    this.likeCount = 0,
+    this.commentCount = 0,
+    this.isLiked
   });  
 }

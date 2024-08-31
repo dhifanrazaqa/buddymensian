@@ -6,8 +6,9 @@ import 'package:intl/intl.dart';
 class HeaderHomeWidget extends StatelessWidget {
   final String name;
   final String username;
+  final bool isUser;
   const HeaderHomeWidget(
-      {super.key, required this.name, required this.username});
+      {super.key, required this.name, required this.username, required this.isUser});
 
   @override
   Widget build(BuildContext context) {
@@ -26,13 +27,13 @@ class HeaderHomeWidget extends StatelessWidget {
                   height: 32,
                   width: 32,
                   decoration: BoxDecoration(
-                    color: AppColors.hijauMuda,
+                    color: isUser ? AppColors.hijauMuda : Colors.purple[50],
                     borderRadius: BorderRadius.circular(8)
                   ),
                   child: Text(
                     name[0],
                     style: GoogleFonts.istokWeb(
-                        fontSize: 18, color: Colors.teal[700]),
+                        fontSize: 18, color: isUser ? Colors.teal[700] : AppColors.unguCaregiver),
                   ),
                 ),
                 const SizedBox(
@@ -60,10 +61,10 @@ class HeaderHomeWidget extends StatelessWidget {
                 ),
                 const Spacer(),
                 CircleAvatar(
-                    backgroundColor: Colors.blue[50],
-                    child: const Icon(
+                    backgroundColor: isUser ? Colors.blue[50] : Colors.purple[50],
+                    child: Icon(
                       Icons.notifications,
-                      color: AppColors.hijauTuaPrimary,
+                      color: isUser ? AppColors.hijauTuaPrimary : AppColors.unguCaregiver,
                     )),
               ],
             ),

@@ -26,10 +26,10 @@ class ProfileScreen extends StatelessWidget {
             children: [
               const Spacer(),
               CircleAvatar(
-                  backgroundColor: Colors.blue[50],
-                  child: const Icon(
+                  backgroundColor: user!.role == 'user' ? Colors.blue[50] : Colors.purple[50],
+                  child: Icon(
                     Icons.notifications,
-                    color: AppColors.hijauTuaPrimary,
+                    color: user.role == 'user' ? AppColors.hijauTuaPrimary : AppColors.unguCaregiver,
                   )),
             ],
           ),
@@ -40,16 +40,17 @@ class ProfileScreen extends StatelessWidget {
           child: Column(
             children: [
               ProfileHeaderWidget(
-                name: user!.fullname!,
+                name: user.fullname!,
+                isUser: user.role == 'user',
               ),
-              const ProfileScheduleWidget(),
+              ProfileScheduleWidget(isUser: user.role == 'user',),
               const ProfilePostsWidget(),
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: SizedBox(
                   height: 40,
                   child: PrimaryBtnWidget(
-                      buttonText: user.role != 'user' ? 'Mode Pasien' : 'Mode Caregiver',
+                      buttonText: user.role != 'user' ? 'Mode Penderita' : 'Mode Caregiver',
                       color: user.role != 'user' ? AppColors.hijauTuaSecondary: AppColors.unguCaregiver,
                       handler: () async {
                         await authProvider.changeMode(user.role != 'user' ? 'user' : 'caregiver');

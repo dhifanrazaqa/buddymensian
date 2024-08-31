@@ -55,12 +55,11 @@ class GuessMeScreen extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 8.0),
                   child: InkWell(
                     onTap: () {
-                      // Handle tap event here
                     },
                     borderRadius: const BorderRadius.all(Radius.circular(8)),
                     child: Container(
                       child: Image.asset(
-                        'assets/icons/ic_help.png',
+                        user!.role == 'user' ? 'assets/icons/ic_help.png' : 'assets/icons/ic_help_cg.png',
                         width: 24,
                         height: 24,
                       ),
@@ -111,7 +110,7 @@ class GuessMeScreen extends StatelessWidget {
                         height: 40,
                         child: PrimaryBtnWidget(
                           buttonText: 'Tambahkan Data Guess Me',
-                          color: user!.role == 'user' ? AppColors.hijauTuaSecondary : AppColors.unguCaregiver,
+                          color: user.role == 'user' ? AppColors.hijauTuaSecondary : AppColors.unguCaregiver,
                           handler: () {
                             Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) =>

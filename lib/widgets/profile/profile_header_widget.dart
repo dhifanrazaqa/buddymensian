@@ -1,9 +1,11 @@
+import 'package:buddymensia/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ProfileHeaderWidget extends StatelessWidget {
   final String name;
-  const ProfileHeaderWidget({super.key, required this.name});
+  final bool isUser;
+  const ProfileHeaderWidget({super.key, required this.name, required this.isUser});
 
   @override
   Widget build(BuildContext context) {
@@ -13,10 +15,10 @@ class ProfileHeaderWidget extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 40,
-            backgroundColor: Colors.teal[100],
+            backgroundColor: isUser ? Colors.teal[100] : Colors.purple[50],
             child: Text(
               name[0],
-              style: GoogleFonts.istokWeb(fontSize: 24, color: Colors.teal[700]),
+              style: GoogleFonts.istokWeb(fontSize: 24, color: isUser ? Colors.teal[700] : AppColors.unguCaregiver),
             ),
           ),
           const SizedBox(width: 16),

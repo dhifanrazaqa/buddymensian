@@ -5,6 +5,7 @@ import 'package:buddymensia/screens/main_screen.dart';
 import 'package:buddymensia/services/auth_services.dart';
 import 'package:buddymensia/services/guessme_services.dart';
 import 'package:buddymensia/services/jadwal_services.dart';
+import 'package:buddymensia/services/local_notification_services.dart';
 import 'package:buddymensia/services/post_services.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -19,12 +20,17 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  await initializeDateFormatting('id_ID', null)
-      .then((_) => runApp(const MyApp()));
+  LocalNotificationService localNotificationService =
+      LocalNotificationService();
+
+  await initializeDateFormatting('id_ID', null).then((_) => runApp(MyApp(
+        localNotificationService: localNotificationService,
+      )));
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({super.key});
+  final LocalNotificationService localNotificationService;
+  const MyApp({super.key, required this.localNotificationService});
 
   @override
   State<MyApp> createState() => _MyAppState();
@@ -36,6 +42,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     _checkLoginStatus();
+    widget.localNotificationService.initialize(context);
   }
 
   void _checkLoginStatus() {
@@ -52,7 +59,7 @@ class _MyAppState extends State<MyApp> {
       providers: [
         ChangeNotifierProvider(create: (context) => AuthService()),
         ChangeNotifierProvider(create: (context) => PostServices()),
-        ChangeNotifierProvider(create: (context) => JadwalServices()),
+        ChangeNotifierProvider(create: (context) => JadwalServices(localNotificationService: widget.localNotificationService)),
         ChangeNotifierProvider(create: (context) => GuessMeService()),
       ],
       child: MaterialApp(

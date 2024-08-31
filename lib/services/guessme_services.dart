@@ -138,7 +138,6 @@ class GuessMeService with ChangeNotifier {
   Future<String> fetchData() async {
     try {
       _items = [];
-      // user_data.User? user = await getUserData();
       QuerySnapshot querySnapshot = await _firebaseFirestore
           .collection('guessme')
           .where('userId', isEqualTo: _auth.currentUser!.uid)

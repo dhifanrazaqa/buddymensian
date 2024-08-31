@@ -16,7 +16,8 @@ import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
 
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  final int? pageIndex;
+  const MainScreen({super.key, this.pageIndex});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -60,6 +61,10 @@ class _MainScreenState extends State<MainScreen> {
     Provider.of<PostServices>(context, listen: false).fetchData();
     Provider.of<JadwalServices>(context, listen: false).fetchData();
     Provider.of<GuessMeService>(context, listen: false).fetchData();
+
+    if(widget.pageIndex != null) {
+      _selectedIndex = widget.pageIndex!;
+    }
     super.initState();
   }
 

@@ -1,5 +1,8 @@
+import 'package:buddymensia/colors.dart';
+import 'package:buddymensia/models/like.dart';
 import 'package:buddymensia/models/post.dart';
 import 'package:buddymensia/models/user.dart';
+import 'package:buddymensia/screens/home/detail_post_screen.dart';
 import 'package:buddymensia/services/auth_services.dart';
 import 'package:buddymensia/services/jadwal_services.dart';
 import 'package:buddymensia/services/post_services.dart';
@@ -48,11 +51,15 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 160,
-        flexibleSpace:
-            HeaderHomeWidget(name: user!.fullname!, username: user.email!),
+        flexibleSpace: HeaderHomeWidget(
+          name: user!.fullname!,
+          username: user.email!,
+          isUser: user.role == 'user',
+        ),
       ),
       body: RefreshIndicator(
         onRefresh: _refresh,
+        color: user.role == 'user' ? AppColors.hijauTuaSecondary : AppColors.unguCaregiver,
         child: SingleChildScrollView(
           physics: const AlwaysScrollableScrollPhysics(),
           child: Padding(
@@ -88,9 +95,52 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         SocialMediaPost(
                           post: post!,
-                          likes: 90,
-                          comments: 3,
-                          shares: 10,
+                          isUser: user.role == 'user',
+                          isLiked: post.isLiked!,
+                          handlerLike: () async {
+                            if (!post.isLiked!) {
+                              await postProvider.addLike(Like(postId: post.id));
+
+                              setState(() {
+                                post.isLiked = true;
+                              });
+                            } else {
+                              await postProvider
+                                  .deleteLike(Like(postId: post.id));
+
+                              setState(() {
+                                post.isLiked = false;
+                              });
+                            }
+                          },
+                          handlerComment: () async {
+                            await postProvider.fetchComment(post.id!);
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => DetailPostScreen(
+                                      post: post,
+                                      isUser: user.role == 'user',
+                                      isLiked: post.isLiked!,
+                                      handlerLike: () async {
+                                        if (!post.isLiked!) {
+                                          await postProvider
+                                              .addLike(Like(postId: post.id));
+
+                                          setState(() {
+                                            post.isLiked = true;
+                                          });
+                                        } else {
+                                          await postProvider.deleteLike(
+                                              Like(postId: post.id));
+
+                                          setState(() {
+                                            post.isLiked = false;
+                                          });
+                                        }
+                                      },
+                                      handlerShare: () {},
+                                    )));
+                          },
+                          handlerShare: () {},
                         ),
                       ],
                     );
@@ -101,6 +151,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
+      
     );
   }
 }

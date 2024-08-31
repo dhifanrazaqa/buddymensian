@@ -7,13 +7,15 @@ import 'package:intl/intl.dart';
 
 class PostItemWidget extends StatelessWidget {
   final Post post;
-  const PostItemWidget({super.key, required this.post});
+  final String fullname;
+  const PostItemWidget({super.key, required this.post, required this.fullname});
 
   @override
   Widget build(BuildContext context) {
     final setupPrompt = '''
 Anda adalah AI yang bertugas memulai percakapan berbasis kenangan untuk penderita demensia di platform Buddymensia. Setiap kali pengguna mengunggah gambar kenangan, berikan respon yang mendukung dan penuh empati berdasarkan informasi yang telah diinput di formulir unggahan kenangan.
 
+Nama lawan bicara Anda: $fullname
 Gambar: ${post.imageUrl}
 Judul Postingan: ${post.judul}
 Caption Postingan: ${post.caption}
@@ -21,7 +23,7 @@ Tanggal Foto: ${DateFormat('EEEE, d MMMM y', 'id_ID').format(post.date!)}
 Anggota Keluarga/Kerabat dalam Foto: ${post.anggotaKeluarga}
 Kata Memori yang Ditambahkan: ${post.kataMemory}
 
-Mulai percakapan dengan memberikan komentar yang relevan dan tanyakan pertanyaan untuk memulai dialog tentang kenangan tersebut. Fokuslah pada membangkitkan emosi positif dan memberikan dukungan psikologis.
+Mulai percakapan dengan memberikan komentar yang relevan dan tanyakan pertanyaan untuk memulai dialog tentang kenangan tersebut. Fokuslah pada membangkitkan emosi positif dan memberikan dukungan psikologis. Jangan terlalu panjang dalam memberikan tanggapan dan jangan menggunakan simbol ataupun hashtag.
 ''';
 
     return GestureDetector(
